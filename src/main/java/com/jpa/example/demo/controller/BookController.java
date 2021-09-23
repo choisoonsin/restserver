@@ -1,5 +1,7 @@
 package com.jpa.example.demo.controller;
 
+import javax.websocket.server.PathParam;
+
 import com.jpa.example.demo.model.Book;
 import com.jpa.example.demo.model.BookRepository;
 
@@ -34,6 +36,11 @@ public class BookController {
     newBook.setName(param.getName());
 
     return bookRepository.save(newBook);
+  }
+
+  @GetMapping("/select/name/{bookName}")
+  public @ResponseBody Iterable<Book> selectByName(@PathParam("bookName") String bookName) {
+    return null;
   }
 
   @GetMapping("/selectAll")
