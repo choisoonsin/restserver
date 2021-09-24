@@ -1,5 +1,7 @@
 package com.jpa.example.demo.controller;
 
+import java.time.format.DateTimeFormatter;
+
 import javax.websocket.server.PathParam;
 
 import com.jpa.example.demo.model.Book;
@@ -34,13 +36,14 @@ public class BookController {
 
     Book newBook = new Book();
     newBook.setName(param.getName());
+    newBook.setPublishedDateOn(param.getPublishedDateOn());
 
     return bookRepository.save(newBook);
   }
 
   @GetMapping("/select/name/{bookName}")
   public @ResponseBody Iterable<Book> selectByName(@PathParam("bookName") String bookName) {
-    return null;
+    return bookRepository.findAllByName(bookName);
   }
 
   @GetMapping("/selectAll")
