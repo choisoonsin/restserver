@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-public interface BookRepository extends CrudRepository<Book, Long>{
+public interface BookCrudRepository extends CrudRepository<Book, Long>{
   
   @Query("select m from #{#entityName} m where m.name like :name%")
   List<Book> findAllByNameStartsWith(@Param("name") String name);

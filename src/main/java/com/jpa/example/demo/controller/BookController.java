@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jpa.example.demo.model.Book;
-import com.jpa.example.demo.model.BookRepository;
+import com.jpa.example.demo.model.BookCrudRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,11 +24,11 @@ import org.springframework.web.client.HttpServerErrorException;
 @RequestMapping("/book")
 public class BookController {
 
-  private BookRepository bookRepository;
+  private BookCrudRepository bookCrudRepository;
 
   @Autowired
-  public BookController(BookRepository bookRepository) {
-    this.bookRepository = bookRepository;
+  public BookController(BookCrudRepository bookCrudRepository) {
+    this.bookCrudRepository = bookCrudRepository;
   }
 
   @PostMapping("/create")
@@ -41,15 +41,15 @@ public class BookController {
     newBook.setName(param.getName());
     newBook.setPublishedDateOn(java.sql.Date.valueOf(LocalDate.now()));
 
-    return bookRepository.save(newBook);
+    return bookCrudRepository.save(newBook);
   }
 
   @GetMapping("/select/name")
   public @ResponseBody Iterable<Book> selectByName(@RequestParam("bookName") String bookName) {
-    List<Book> results =  bookRepository.findAllByNameStartsWith(bookName);
+    List<Book> results =  bookCrudRepository.findAllByNameStartsWith(bookName);
 
     // 다음과 같이 Native Query를 작성할 수 있다.
-    // List<Book> results =  bookRepository.findAllByNameStartsWithNative(bookName);
+    // List<Book> results =  bookCrudRepository.findAllByNameStartsWithNative(bookName);
     return results;
   }
 
@@ -57,13 +57,13 @@ public class BookController {
   @PostMapping("/update")
   public @ResponseBody int updateById(@RequestBody Book param) {
     // CrudRepository의 확장 없이 update하는 방법. @Transactional 이 필요 없다 ?
-    // Book selectedBook = bookRepository.findById(param.getId()).orElseThrow();
+    // Book selectedBook = bookCrudRepository.findById(param.getId()).orElseThrow();
     // selectedBook.setName(param.getName());
     
-    // return bookRepository.save(selectedBook);
+    // return bookCrudRepository.save(selectedBook);
 
     // CrudRepository에 update문 추가
-    int updatedCnt = bookRepository.updateBookSetNameForId(param.getId(), param.getName());
+    int updatedCnt = bookCrudRepository.updateBookSetNameForId(param.getId(), param.getName());
     System.out.println("Updated count:"+updatedCnt);
 
     return updatedCnt;
@@ -71,8 +71,9 @@ public class BookController {
 
   @PostMapping("/delete")
   public @ResponseBody Map<String, String> deleteById(@RequestBody Book param) {
-    bookRepository.delete(param);
+    bookCrudRepository.delete(param);
     
+    // TODO: DML 공통 처리 Response 작성
     Map<String, String> result = new HashMap<>();
     result.put("message", "success");
 
@@ -81,7 +82,7 @@ public class BookController {
 
   @GetMapping("/selectAll")
   public @ResponseBody Iterable<Book> selectAllBooks() {
-    return bookRepository.findAll();
+    return bookCrudRepository.findAll();
   }
   
 }
