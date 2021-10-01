@@ -9,12 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @Entity
-@Setter
-@Getter
 @Table(indexes = {
   @Index(name="idx_book_name", columnList = "name"),
   @Index(name="idx_book_name_published_date", columnList = "name, publishedDateOn"),
